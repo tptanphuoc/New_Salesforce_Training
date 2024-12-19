@@ -1,0 +1,50 @@
+<aura:component controller="CMP_SearchStudentCtrl" implements="flexipage:availableForAllPageTypes" access="public">
+    <!-- Attributes -->
+    <aura:attribute name="studentCode" type="String" />
+    <aura:attribute name="studentName" type="String" />
+    <aura:attribute name="selectedClass" type="String" />
+    <aura:attribute name="classOptions" type="List" />
+    <aura:attribute name="selectedGender" type="String" />
+    <aura:attribute name="genderOptions" type="List" />
+    <aura:attribute name="birthday" type="Date" />
+    <aura:attribute name="dayOptions" type="List" />
+    <aura:attribute name="selectedDay" type="String" />
+    <aura:attribute name="monthOptions" type="List" />
+    <aura:attribute name="selectedMonth" type="String" />
+    <aura:attribute name="yearOptions" type="List" />
+    <aura:attribute name="selectedYear" type="String" />
+    <!-- Handlers -->
+    <aura:handler name="init" value="{!this}" action="{!c.initFilter}" />
+    <aura:method name="startSearchFromChild" action="{!c.handleStartSearchFromChild}"/>
+    <aura:method name="resetInput" action="{!c.handleResetInput}"/>
+    <!-- Register a COMPONENT event -->
+    <aura:registerEvent name="filterEvent" type="c:CMP_StudentFilterEvent"/>
+    <aura:registerEvent name="toggleResetButton" type="c:CMP_ToggleResetButtonEvent"/>
+
+    <div class="slds-grid slds-gutters slds-wrap slds-m-bottom_medium">
+        <div class="slds-col slds-size_1-of-8">
+            <lightning:input type="text" label="Student code" value="{!v.studentCode}" onkeyup="{!c.handleDisableResetBtn}"/>
+        </div>
+        <div class="slds-col slds-size_1-of-8">
+            <lightning:input type="text" label="Name" value="{!v.studentName}" onkeyup="{!c.handleDisableResetBtn}"/>
+        </div>
+        <div class="slds-col slds-size_1-of-12">
+            <lightning:combobox label="Class" options="{!v.classOptions}" value="{!v.selectedClass}" placeholder="--None--" onchange="{!c.handleDisableResetBtn}"/>
+        </div>
+        <div class="slds-col slds-size_1-of-12">
+            <lightning:combobox label="Gender" options="{!v.genderOptions}" value="{!v.selectedGender}" placeholder="--None--" onchange="{!c.handleDisableResetBtn}"/>
+        </div>
+        <div class="slds-col slds-size_2-of-12">
+            <lightning:input type="date" label="Birthday" value="{!v.birthday}" dateStyle="short" onchange="{!c.handleDisableResetBtn}"/>
+        </div>
+        <div class="slds-col slds-size_1-of-12">
+            <lightning:combobox label="Day" options="{!v.dayOptions}" value="{!v.selectedDay}" placeholder="--None--" onchange="{!c.handleDisableResetBtn}"/>
+        </div>
+        <div class="slds-col slds-size_1-of-12">
+            <lightning:combobox label="Month" options="{!v.monthOptions}" value="{!v.selectedMonth}" placeholder="--None--" onchange="{!c.handleDisableResetBtn}"/>
+        </div>
+        <div class="slds-col slds-size_1-of-12">
+            <lightning:combobox label="Year" options="{!v.yearOptions}" value="{!v.selectedYear}" placeholder="--None--" onchange="{!c.handleDisableResetBtn}"/>
+        </div>
+    </div>
+</aura:component>

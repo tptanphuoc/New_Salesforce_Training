@@ -1,0 +1,49 @@
+<aura:component implements="flexipage:availableForAllPageTypes" access="global">
+    <!-- Attributes -->
+    <aura:attribute name="studentColumns" type="List" />
+    <aura:attribute name="allStudent" type="List" default="[]"/>
+    <aura:attribute name="studentListResult" type="Student__c[]" />
+    <aura:attribute name="selectedRowsCount" type="Integer" default="0"/>
+    <!-- Handlers -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:method name="updateCheckboxAll" action="{!c.handleUpdateCheckboxAll}"/>
+    <!-- Events -->
+    <aura:registerEvent name="disableDeleteButton" type="c:CMP_DisableDeleteButtonEvent"/>
+    <aura:registerEvent name="recordActions" type="c:CMP_RecordActionsEvent"/>
+
+    <table class="slds-table slds-table_bordered slds-table_striped">
+        <thead>
+            <tr> 
+                <th scope="col">
+                    <lightning:input type="checkbox" name="selectAll" aura:id="selectAllCheckbox" onchange="{!c.handleSelectAll}" />
+                </th>
+                <aura:iteration items="{!v.studentColumns}" var="column">
+                    <th scope="col" key="{!column.fieldName}">
+                        <div class="slds-truncate" title="{!column.label}">{!column.label}</div>
+                    </th>
+                </aura:iteration>
+            </tr>
+        </thead>
+        <tbody>
+            <aura:iteration items="{!v.studentListResult}" var="student">
+                <tr>
+                    <td>
+                        <lightning:input type="checkbox" name="selectRow" aura:id="selectRowCheckbox" checked="{!student.checked}" value="{!student.Id}" onchange="{!c.handleRowSelect}" />
+                    </td>
+                    <td>{!student.StudentCode__c}</td>
+                    <td>{!student.Firstname__c}</td>
+                    <td>{!student.Lastname__c}</td>
+                    <td>{!student.Birthday__c}</td>
+                    <td>{!student.Gender__c}</td>
+                    <td>{!student.ClassName}</td>
+                    <td>
+                        <lightning:buttonIcon aura:id="View" value="{!student.Id}" iconName="utility:preview" onclick="{!c.handleRowAction}" />
+                        <lightning:buttonIcon aura:id="Update" value="{!student.Id}" iconName="utility:edit" onclick="{!c.handleRowAction}" />
+                        <lightning:buttonIcon aura:id="Delete" value="{!student.Id}" iconName="utility:delete" onclick="{!c.handleRowAction}" />
+                    </td>
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>
+    <div class="slds-text-body_regular slds-m-top_small">Selected Rows: {!v.selectedRowsCount}</div>
+</aura:component>

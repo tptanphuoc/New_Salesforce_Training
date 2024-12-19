@@ -1,0 +1,150 @@
+<apex:page docType="html-5.0" controller="VF_UpdateStudentCtrl">
+
+    <style>
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    
+        .custom-label {
+            font-weight: bold;
+            font-size: 13px;
+        }
+    
+        .custom-input {
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+    
+        .custom-title {
+            font-size: 20px;
+            margin-left: 20px;
+        }
+        .errorMsg {
+            display: flex;
+            margin-top: 7px;
+        }
+    
+        .container select {
+            width: 70%;
+            margin-right: 69px; 
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .spinner-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: none;
+        }
+        .spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .spinner-text {
+            color: white;
+            font-size: 20px;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+    
+    <apex:outputText escape="false" value="{!'<meta http-equiv=\"X-UA-Compatible\" content=\"IE=EmulateIE8\"/>'}"/>
+    <apex:outputText escape="false" value="{!'<ext:ResourcePlaceHolder runat=\"server\" Mode=\"Style\" />'}"/>
+    <apex:form onsubmit="return showSpinner()">
+        <div class="container"> 
+            <apex:pageBlock >
+                <apex:facet name="header">
+                    <h2 class="custom-title">モーダル</h2>
+                </apex:facet>
+
+                <apex:pageMessages />
+
+                <apex:pageBlockSection >
+                    <apex:outputLabel value="名 *" styleClass="custom-label" />
+                    <apex:pageBlockSectionItem >
+                        <apex:inputField value="{!student.Firstname__c}" styleClass="custom-input"/>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:outputLabel value="性 *" styleClass="custom-label" />
+                    <apex:pageBlockSectionItem >
+                        <apex:inputField value="{!student.Lastname__c}" styleClass="custom-input"/>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:outputLabel value="生年月日 *" styleClass="custom-label" />
+                    <apex:pageBlockSectionItem >
+                        <apex:inputField value="{!student.Birthday__c}" styleClass="custom-input"/>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:outputLabel value="平均学分绩点 *" styleClass="custom-label" />
+                    <apex:pageBlockSectionItem >
+                        <apex:inputField value="{!student.GPAScore__c}" styleClass="custom-input"/>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:outputLabel value="合計クレジット *" styleClass="custom-label" />
+                    <apex:pageBlockSectionItem >
+                        <apex:inputField value="{!student.TotalCredit__c}" styleClass="custom-input"/>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:outputLabel value="クラス *" styleClass="custom-label" />
+                    <apex:pageBlockSectionItem >
+                        <apex:selectList value="{!selectedClass}" size="1" styleClass="custom-input">
+                            <apex:selectOptions value="{!classOptions}" />
+                        </apex:selectList>
+                        <apex:outputText styleClass="errorMsg" value="{!classError}" style="color:red;" 
+                                        rendered="{!NOT(ISBLANK(classError))}"/>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:outputLabel value="性別 *" styleClass="custom-label" />
+                    <apex:pageBlockSectionItem >
+                        <apex:selectList value="{!selectedGender}" size="1" styleClass="custom-input">
+                            <apex:selectOptions value="{!genderOptions}" />  
+                        </apex:selectList>
+                        <apex:outputText styleClass="errorMsg" value="{!genderError}" style="color:red;" 
+                                        rendered="{!NOT(ISBLANK(genderError))}"/>
+                    </apex:pageBlockSectionItem>
+
+                    <apex:outputLabel value="ステータス *" styleClass="custom-label" />
+                    <apex:pageBlockSectionItem >
+                        <apex:selectList value="{!selectedStatus}" size="1" styleClass="custom-input">
+                            <apex:selectOptions value="{!learningStatusOptions}" />
+                        </apex:selectList>
+                        <apex:outputText styleClass="errorMsg" value="{!statusError}" style="color:red;" 
+                                        rendered="{!NOT(ISBLANK(statusError))}"/>
+                    </apex:pageBlockSectionItem>
+                </apex:pageBlockSection>
+
+                <apex:pageBlockButtons >
+                    <apex:commandButton action="{!updateStudent}" value="モーダル" />
+                    <apex:commandButton value="戻る" onclick="window.location.href='/apex/VF_SearchStudent'; return false;" />
+                </apex:pageBlockButtons>
+            </apex:pageBlock>
+        </div>
+        <div id="spinnerWrapper" class="spinner-wrapper">
+            <div class="spinner">
+                <img src="/img/loading.gif" alt="Loading..."/>
+                <div class="spinner-text">Processing...</div>
+            </div>
+        </div>
+    </apex:form>
+<script>
+    function showSpinner() {
+        document.getElementById('spinnerWrapper').style.display = 'block';
+
+        setTimeout(function() {
+            document.getElementById('spinnerWrapper').style.display = 'none';
+            document.getElementById('{!$Component.theForm.thePageBlock.submitBtn}').click();
+        }, 2000);
+    }
+</script>
+
+</apex:page>

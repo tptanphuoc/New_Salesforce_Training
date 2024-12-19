@@ -1,0 +1,124 @@
+<template>
+    <!-- Search Form Container -->
+    <div class="search-form slds-grid slds-gutters slds-wrap slds-m-bottom_medium">
+        <!-- Student Code -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-8 slds-p-bottom_small">
+            <lightning-input type="text" 
+                label="Student code" 
+                name="searchStudentCode"
+                value={searchCriterias.searchStudentCode} 
+                onchange={handleInputChange}>
+            </lightning-input>
+        </div>
+
+        <!-- Name -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-8 slds-p-bottom_small">
+            <lightning-input type="text" 
+                label="Name" 
+                name="searchName" 
+                value={searchCriterias.searchName}
+                onchange={handleInputChange}>
+            </lightning-input>
+        </div>
+
+        <!-- Class -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-12 slds-p-bottom_small">
+            <lightning-combobox label="Class" 
+                options={classOptions} 
+                name="selectedClass"
+                value={searchCriterias.selectedClass} 
+                placeholder="--None--"
+                onchange={handleInputChange}>
+            </lightning-combobox>
+        </div>
+
+        <!-- Gender -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-12 slds-p-bottom_small">
+            <lightning-combobox label="Gender" 
+                options={genderOptions} 
+                name="selectedGender"
+                value={searchCriterias.selectedGender} 
+                placeholder="--None--"
+                onchange={handleInputChange}>
+            </lightning-combobox>
+        </div>
+
+        <!-- Birthday -->
+        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_2-of-12 slds-p-bottom_small">
+            <lightning-input type="date" 
+                label="Birthday" 
+                name="searchBirthday" 
+                value={searchCriterias.searchBirthday}
+                date-style="short" 
+                onchange={handleInputChange}>
+            </lightning-input>
+        </div>
+
+        <!-- Day -->
+        <div class="slds-col slds-size_1-of-3 slds-medium-size_1-of-2 slds-large-size_1-of-12 slds-p-bottom_small">
+            <lightning-combobox label="Day" 
+                options={dayOptions} 
+                name="selectedDay" 
+                value={searchCriterias.selectedDay}
+                placeholder="--None--" 
+                onchange={handleInputChange}>
+            </lightning-combobox>
+        </div>
+
+        <!-- Month -->
+        <div class="slds-col slds-size_1-of-3 slds-medium-size_1-of-2 slds-large-size_1-of-12 slds-p-bottom_small">
+            <lightning-combobox label="Month" 
+                options={monthOptions} 
+                name="selectedMonth"
+                value={searchCriterias.selectedMonth} 
+                placeholder="--None--"
+                onchange={handleInputChange}>
+            </lightning-combobox>
+        </div>
+
+        <!-- Year -->
+        <div class="slds-col slds-size_1-of-3 slds-medium-size_1-of-2 slds-large-size_1-of-12 slds-p-bottom_small">
+            <lightning-combobox label="Year" 
+                options={yearOptions} 
+                name="selectedYear"
+                value={searchCriterias.selectedYear} 
+                placeholder="--None--"
+                onchange={handleInputChange}>
+            </lightning-combobox>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_medium">
+        <div class="slds-col slds-size_1-of-1">
+            <div class="slds-button-group-row">
+                <lightning-button class="slds-m-right_x-small slds-m-bottom_x-small" 
+                    variant="brand" 
+                    label="Search" 
+                    onclick={sendFiltersToSearch}
+                    icon-name="utility:search">
+                </lightning-button>
+                <lightning-button class="slds-m-right_x-small slds-m-bottom_x-small" 
+                    variant="brand-outline" 
+                    label="Create" 
+                    onclick={toggleCreateModal}
+                    icon-name="utility:new">
+                </lightning-button>
+                <lightning-button class="slds-m-right_x-small slds-m-bottom_x-small resetBtn" 
+                    variant="brand-outline" 
+                    label="Reset" 
+                    disabled
+                    onclick={clearFilterInputs} 
+                    icon-name="utility:clear">
+                </lightning-button>
+                <lightning-button class="slds-m-right_x-small slds-m-bottom_x-small deleteBtn" 
+                    variant="destructive" 
+                    label="Delete" 
+                    disabled
+                    onclick={toggleDeleteModal} 
+                    icon-name="utility:delete">
+                </lightning-button>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningMessageChannel xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>This event is fired when user click Create button</description>
+    <isExposed>true</isExposed>
+    <lightningMessageFields>
+        <description>The Current Modal</description>
+        <fieldName>modalName</fieldName>
+    </lightningMessageFields>
+    <lightningMessageFields>
+        <description>Boolean value to know whether to open/close the modal or not</description>
+        <fieldName>isOpen</fieldName>
+    </lightningMessageFields>
+    <masterLabel>Toggle Modal</masterLabel>
+</LightningMessageChannel>

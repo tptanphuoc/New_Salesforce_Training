@@ -1,0 +1,55 @@
+<template>
+    <lightning-card title="Update existing Student" icon-name="standard:job_position">
+        <div class="slds-p-around_small">
+            <form class="slds-form slds-form_stacked" onsubmit={handleUpdateStudent}>
+                <lightning-input 
+                    label="First Name" 
+                    value={existingStudent.Firstname__c} 
+                    name="Firstname__c" 
+                    onchange={handleInputChange}
+                ></lightning-input>
+                <lightning-input 
+                    label="Last Name" 
+                    value={existingStudent.Lastname__c} 
+                    name="Lastname__c"
+                    onchange={handleInputChange}
+                ></lightning-input>
+                <lightning-input 
+                    label="Birthday" 
+                    value={existingStudent.Birthday__c} 
+                    type="date" 
+                    name="Birthday__c"
+                    onchange={handleInputChange} 
+                    date-style="short"
+                ></lightning-input>
+                <lightning-select 
+                    label="Class" 
+                    value={existingStudent.Class_look__c} 
+                    options={classOptions} 
+                    name="Class_look__c"
+                    onchange={handleInputChange}
+                ></lightning-select>
+                <lightning-select 
+                    label="Gender" 
+                    value={existingStudent.Gender__c} 
+                    options={genderOptions} 
+                    name="Gender__c"
+                    onchange={handleInputChange}
+                ></lightning-select>
+                <lightning-select 
+                    label="Learning Status" 
+                    value={existingStudent.LearningStatus__c} 
+                    options={learningStatusOptions} 
+                    name="LearningStatus__c"
+                    onchange={handleInputChange} 
+                    required
+                ></lightning-select>
+
+                <div class="slds-m-top_medium slds-text-align_right">
+                    <lightning-button label="Cancel" variant="neutral" onclick={closeUpdateModal}></lightning-button>
+                    <lightning-button class="slds-m-left_small" label="Update" type="submit" variant="brand"></lightning-button>
+                </div>
+            </form>
+        </div>
+    </lightning-card>
+</template>

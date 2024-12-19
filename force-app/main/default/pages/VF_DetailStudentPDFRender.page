@@ -1,0 +1,157 @@
+<apex:page controller="VF_DetailStudentPDFRenderCtrl" showHeader="false" renderAs="pdf" applyBodyTag="false">
+    <head>
+        <style>
+            /* Page styling */
+            body {
+                font-family : 'Arial Unicode MS', 'MS Gothic', sans-serif;
+                color: #333;
+                overflow: hidden;
+            }
+
+            /* Section header styling */
+            .section-header {
+                font-size: 18px;
+                font-weight: bold;
+                color: #2a7ae2;
+                margin-top: 20px;
+                margin-bottom: 10px;
+                border-bottom: 2px solid #2a7ae2;
+                padding-bottom: 5px;
+            }
+
+            /* Semester container styling */
+            .semester-container {
+                page-break-inside: avoid !important; /* Prevent page break inside this container */
+            }
+    
+            /* PageBlock styling */
+            .page-block {
+                margin-bottom: 20px;
+            }
+            
+            /* Table styling */
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
+                font-size: 12px;
+            }
+    
+            th, td {
+                padding: 8px;
+                text-align: center;
+                border: 1px solid #ddd;
+            }
+    
+            th {
+                background-color: #f2f2f2;
+                font-weight: bold;
+            }
+    
+            /* Column styling */
+            .subject-name-column {
+                width: 20%;
+            }
+    
+            /* Text and field styling */
+            .field-label {
+                font-weight: bold;
+                color: #555;
+            }
+    
+            .value {
+                font-weight: normal;
+                color: #333;
+            }
+    
+            /* Highlighting */
+            .highlight-text {
+                font-weight: bold;
+                color: #2a7ae2;
+            }
+
+            /* Style for low scores */
+            .low-score {
+                color: red;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+
+    <!-- Section for Personal Information -->
+    <div class="section-header">Student Information</div>
+    <apex:pageMessages />
+
+    <div class="page-block">
+        <apex:pageBlock >
+            <apex:pageBlockSection columns="2">
+                <apex:outputText label="Student Code" value="{!student.StudentCode__c}"/>
+                <apex:outputText label="Gender" value="{!student.Gender__c}"/>
+                <apex:outputText label="First Name" value="{!student.Firstname__c}"/>
+                <apex:outputText label="Class" value="{!student.Class_look__r.Name}"/>
+                <apex:outputText label="Last Name" value="{!student.Lastname__c}"/>
+                <apex:outputText label="Status" value="{!student.LearningStatus__c}"/>
+                <apex:outputField label="Date of Birth" value="{!student.Birthday__c}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </div>
+
+    <!-- Section for Academic Information -->
+    <div class="section-header">Academic Information</div>
+
+    <div class="page-block">
+        <div style="margin-bottom: 10px;">
+            Total Credits: <span class="highlight-text">{!student.TotalCredit__c}</span> &nbsp;&nbsp;&nbsp; GPA: 
+            <span class="highlight-text">{!student.GPAScore__c}</span>
+        </div>
+
+        <!-- Dynamic Table for Subject Scores -->
+        <apex:repeat value="{!semesterSubjectScores}" var="semesterName">
+            <div class="semester-container">
+                <div class="section-header" style="font-size: 16px; color: #333;">
+                    {!semesterName}
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Course Code</th>
+                            <th>Course Name</th>
+                            <th>Credits</th>
+                            <th>Progress</th>
+                            <th>Practical</th>
+                            <th>Midterm</th>
+                            <th>Final</th>
+                            <th>Average</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <apex:repeat value="{!semesterSubjectScores[semesterName].subjectScores}" var="subjectScoreWrapper">
+                            <tr>
+                                <td>{!subjectScoreWrapper.subjectScore.Subject_look__r.SubjectCode__c}</td>
+                                <td class="subject-name-column">{!subjectScoreWrapper.subjectScore.Subject_look__r.Name}</td>
+                                <td>{!subjectScoreWrapper.subjectScore.Subject_look__r.CourseCredit__c}</td>
+                                <td>{!subjectScoreWrapper.progress}</td>
+                                <td>{!subjectScoreWrapper.practical}</td>
+                                <td>{!subjectScoreWrapper.midterm}</td>
+                                <td>{!subjectScoreWrapper.finalExam}</td>
+                                <td class="{!IF(subjectScoreWrapper.subjectScore.AverageScore__c != null && 
+                                            subjectScoreWrapper.subjectScore.AverageScore__c < 5.0, 
+                                            'low-score', 
+                                            '')}">
+                                {!subjectScoreWrapper.subjectScore.AverageScore__c}
+                            </td>
+                            </tr>
+                        </apex:repeat>
+                        <tr>
+                            <td></td>
+                            <td>Semester AVG Score</td>
+                            <td>{!semesterSubjectScores[semesterName].totalCredits}</td>
+                            <td colspan="4"></td>
+                            <td>{!semesterSubjectScores[semesterName].semesterAVGScore}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </apex:repeat>
+    </div>
+</apex:page>

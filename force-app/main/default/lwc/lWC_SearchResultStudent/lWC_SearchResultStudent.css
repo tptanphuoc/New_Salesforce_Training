@@ -1,0 +1,42 @@
+/* CSS để hỗ trợ responsive */
+.slds-scrollable_x {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Đảm bảo các cột có độ rộng tối thiểu trên mobile */
+.slds-table td, .slds-table th {
+    min-width: 120px;
+}
+
+/* Column cho các nút action */
+.slds-cell-shrink {
+    width: 1%;
+    white-space: nowrap;
+}
+
+/* Cho phép text wrap trong các ô */
+.slds-cell-wrap {
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+/* Media queries cho responsive */
+@media screen and (max-width: 48em) {
+    .slds-hidden_medium {
+        display: block !important;
+    }
+    .slds-show_medium {
+        display: none !important;
+    }
+}
+
+@media screen and (min-width: 48em) {
+    .slds-hidden_medium {
+        display: none !important;
+    }
+    .slds-show_medium {
+        display: block !important;
+    }
+}

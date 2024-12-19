@@ -1,0 +1,10 @@
+<aura:event type="COMPONENT" description="Student Filter Event">
+    <aura:attribute name="studentCodeFilter" type="String"/>
+    <aura:attribute name="studentNameFilter" type="String"/>
+    <aura:attribute name="classFilter" type="String"/>
+    <aura:attribute name="genderFilter" type="String"/>
+    <aura:attribute name="birthdayFilter" type="Date"/>
+    <aura:attribute name="dayFilter" type="String"/>
+    <aura:attribute name="monthFilter" type="String"/>
+    <aura:attribute name="yearFilter" type="String"/>
+</aura:event>

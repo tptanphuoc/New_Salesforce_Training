@@ -1,0 +1,79 @@
+<aura:component controller="CMP_DetailStudentCtrl" implements="flexipage:availableForAllPageTypes" access="public">
+    <!-- Attributes -->
+    <aura:attribute name="studentId" type="String"/>
+    <aura:attribute name="studentDetails" type="Student__c" default="{'sobjectType': 'Student__c'}"/>
+    <aura:attribute name="formattedBirthday" type="String" />
+    <!-- Handlers -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <!-- Events -->
+    <aura:registerEvent name="closeDetailModal" type="c:CMP_CloseModalEvent" />
+    <!-- Navigation service -->
+    <lightning:navigation aura:id="navService"/>
+
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Student Details</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div class="slds-grid slds-gutters slds-wrap">
+                    <div class="slds-col slds-size_1-of-2">
+                        <div class="slds-form-element slds-form-element_readonly">
+                            <span class="slds-form-element__label">Student Code</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">{!v.studentDetails.StudentCode__c}</div>
+                            </div>
+                        </div>
+                        <div class="slds-form-element slds-form-element_readonly">
+                            <span class="slds-form-element__label">First Name</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">{!v.studentDetails.Firstname__c}</div>
+                            </div>
+                        </div>
+                        <div class="slds-form-element slds-form-element_readonly">
+                            <span class="slds-form-element__label">Last Name</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">{!v.studentDetails.Lastname__c}</div>
+                            </div>
+                        </div>
+                        <div class="slds-form-element slds-form-element_readonly">
+                            <span class="slds-form-element__label">Date of Birth</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">{!v.formattedBirthday}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <div class="slds-form-element slds-form-element_readonly">
+                            <span class="slds-form-element__label">Gender</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">{!v.studentDetails.Gender__c}</div>
+                            </div>
+                        </div>
+                        <div class="slds-form-element slds-form-element_readonly">
+                            <span class="slds-form-element__label">Class</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">
+                                    <a onclick="{!c.navigateToClassDetail}">
+                                        {!v.studentDetails.Class_look__r.Name}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slds-form-element slds-form-element_readonly">
+                            <span class="slds-form-element__label">Learning Status</span>
+                            <div class="slds-form-element__control">
+                                <div class="slds-form-element__static">{!v.studentDetails.LearningStatus__c}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="slds-modal__footer">
+                <lightning:button label="Close" onclick="{!c.closeDetailModal}" />
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+
+</aura:component>

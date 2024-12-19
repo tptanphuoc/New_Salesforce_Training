@@ -1,0 +1,91 @@
+<template>
+    <section class="slds-modal slds-fade-in-open slds-modal_large" role="dialog" tabindex="-1"
+        aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1">
+        <div class="slds-modal__container">
+            <!-- Modal Header -->
+            <header class="slds-modal__header">
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Student Information and GPA
+                </h2>
+            </header>
+
+            <!-- Modal Content -->
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <div class="slds-m-around_medium">
+                    <h2 class=" slds-card__header-title slds-text-heading_medium">Student Information</h2>
+                    <!-- Student Details Section Start-->
+                    <div class="slds-grid slds-gutters slds-wrap">
+                        <div class="slds-col slds-size_1-of-2">
+                            <div class="slds-form-element slds-form-element_readonly">
+                                <span class="slds-form-element__label">Student Code</span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__static">{studentDetails.StudentCode__c}</div>
+                                </div>
+                            </div>
+                            <div class="slds-form-element slds-form-element_readonly">
+                                <span class="slds-form-element__label">First Name</span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__static">{studentDetails.Firstname__c}</div>
+                                </div>
+                            </div>
+                            <div class="slds-form-element slds-form-element_readonly">
+                                <span class="slds-form-element__label">Last Name</span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__static">{studentDetails.Lastname__c}</div>
+                                </div>
+                            </div>
+                            <div class="slds-form-element slds-form-element_readonly">
+                                <span class="slds-form-element__label">Birthday</span>
+                                <div class="slds-form-element__control">
+                                    <lightning-formatted-date-time value={studentDetails.Birthday__c} year="numeric"
+                                        month="numeric" day="numeric"></lightning-formatted-date-time>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-2">
+                            <div class="slds-form-element slds-form-element_readonly">
+                                <span class="slds-form-element__label">Gender</span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__static">{studentDetails.Gender__c}</div>
+                                </div>
+                            </div>
+                            <div class="slds-form-element slds-form-element_readonly">
+                                <span class="slds-form-element__label">Class</span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__static">
+                                        <template if:true={studentDetails.Class_look__c}>
+                                            <a onclick={navigateToClassDetail}>{studentDetails.Class_look__r.Name}</a>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slds-form-element slds-form-element_readonly">
+                                <span class="slds-form-element__label">Learning Status</span>
+                                <div class="slds-form-element__control">
+                                    <div class="slds-form-element__static">{studentDetails.LearningStatus__c}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Student Details Section End-->
+                </div>
+                <!-- GPA Score Table Start -->
+                <template lwc:if={subjectScores}>
+                    <c-l-w-c_-score-table 
+                        student-details={studentDetails} 
+                        semester-options={semesterOptions} 
+                        subject-scores={subjectScores} 
+                        onsemesterchange={handleSemesterChange}>
+                    </c-l-w-c_-score-table>
+                </template>
+                <!-- GPA Score Table End -->
+            </div>
+
+            <!-- Modal Footer -->
+            <footer class="slds-modal__footer">
+                <lightning-button label="Close" onclick={closeDetailModal}></lightning-button>
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>

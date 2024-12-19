@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexTestSuite xmlns="http://soap.sforce.com/2006/04/metadata">
+    <testClassName>B01_DeleteSubjectScoreBatchTest</testClassName>
+    <testClassName>B02_CreateSubjectScoreBatchTest</testClassName>
+    <testClassName>B03_UpdateStudentScoreBatchTest</testClassName>
+    <testClassName>CMP_CreateStudentCtrlTest</testClassName>
+    <testClassName>CMP_DetailStudentCtrlTest</testClassName>
+    <testClassName>CMP_SearchStudentCtrlTest</testClassName>
+    <testClassName>CMP_UpdateStudentCtrlTest</testClassName>
+    <testClassName>LWC_CreateStudentCtrlTest</testClassName>
+    <testClassName>LWC_DetailStudentCtrlTest</testClassName>
+    <testClassName>LWC_SearchStudentCtrlTest</testClassName>
+    <testClassName>LWC_UpdateStudentCtrlTest</testClassName>
+    <testClassName>T01_StudentTriggerHandlerTest</testClassName>
+    <testClassName>T02_ScoreTriggerHandlerTest</testClassName>
+    <testClassName>VF_CreateStudentCtrlTest</testClassName>
+    <testClassName>VF_DetailStudentCtrlTest</testClassName>
+    <testClassName>VF_SearchStudentCtrlTest</testClassName>
+    <testClassName>VF_UpdateStudentCtrlTest</testClassName>
+</ApexTestSuite>

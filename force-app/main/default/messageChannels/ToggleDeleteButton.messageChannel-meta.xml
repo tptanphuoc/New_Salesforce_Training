@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningMessageChannel xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>This event is fired when user selecte one/all checkbox</description>
+    <isExposed>true</isExposed>
+    <lightningMessageFields>
+        <description>Boolean value to know whether to enable/disable delete button or not</description>
+        <fieldName>isDisable</fieldName>
+    </lightningMessageFields>
+    <masterLabel>Toggle Delete Button</masterLabel>
+</LightningMessageChannel>

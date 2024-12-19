@@ -1,0 +1,43 @@
+<apex:page controller="VF_DetailStudentCtrl">
+
+    <style>
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .custom-title {
+            font-size: 20px;
+            margin-left: 20px;
+        }
+    </style>
+
+    <apex:outputText escape="false" value="{!'<meta http-equiv=\"X-UA-Compatible\" content=\"IE=EmulateIE8\"/>'}"/>
+    <apex:outputText escape="false" value="{!'<ext:ResourcePlaceHolder runat=\"server\" Mode=\"Style\" />'}"/>
+    <apex:form >
+        <div class="container">
+            <apex:pageBlock id="thePageBlock">
+                <apex:facet name="header">
+                    <h2 class="custom-title">学生の詳細</h2>
+                </apex:facet>
+                <apex:pageMessages />
+                <apex:pageBlockSection columns="2">
+                    <apex:outputField label="学生コード" value="{!studentDetails.StudentCode__c}" />
+                    <apex:outputText label="性別" 
+                                    value="{!IF(studentDetails.Gender__c == 'Male', '男性 (Male)', '女性 (Female)')}" />
+                    <apex:outputField label="姓" value="{!studentDetails.Lastname__c}" />
+                    <apex:outputField label="クラス" value="{!studentDetails.Class_look__r.Name}" />
+                    <apex:outputField label="名" value="{!studentDetails.Firstname__c}" />
+                    <apex:outputText label="Status" 
+                    value="{!CASE(studentDetails.LearningStatus__c, 'Enrolled', '在学中 (Enrolled)', 'Withdrawn', '退学 (Withdrawn)', 'Graduated', '卒業済み (Graduated)', 'Unknown')}" />
+                    <apex:outputField label="生年月日" value="{!studentDetails.Birthday__c}" />
+                </apex:pageBlockSection>
+                <apex:pageBlockButtons >
+                    <apex:commandButton value="戻る" onclick="window.location.href='/apex/VF_SearchStudent'; return false;" />
+                </apex:pageBlockButtons>
+            </apex:pageBlock>
+        </div>
+    </apex:form>
+    
+</apex:page>

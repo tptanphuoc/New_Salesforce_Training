@@ -1,0 +1,16 @@
+/* CSS for responsive search form */
+.search-form {
+    max-width: 100%;
+}
+
+/* Button group styling */
+.slds-button-group-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+/* Ensure buttons maintain proper spacing */
+.slds-button-group-row lightning-button {
+    display: inline-block;
+}

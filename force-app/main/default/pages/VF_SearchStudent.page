@@ -1,0 +1,348 @@
+<apex:page showHeader="true" docType="html-5.0" controller="VF_SearchStudentCtrl" action="{!searchStudent}">
+    
+    <style>
+        .search-form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+    
+        .search-form .input-wrapper {
+            flex-basis: 9%; /* Set width for each search field */
+            display: flex;
+            flex-direction: column;
+        }
+     
+        .search-form .input-wrapper .label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+     
+        .search-form input,
+        .search-form select {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .pagination-link {
+            margin: 0 5px;
+            padding: 5px 10px;
+            text-decoration: none;
+            border: 1px solid #d8dde6;
+            border-radius: 3px;
+        }
+
+        .current-page {
+            background-color: #1589ee;
+            color: white;
+            font-weight: bold;
+        }
+
+        .disableBtn {
+            color: #0003 !important;
+            pointer-events: none;
+        }
+    </style>
+
+    <apex:outputText escape="false" value="{!'<meta http-equiv=\"X-UA-Compatible\" content=\"IE=EmulateIE8\"/>'}"/>
+    <apex:outputText escape="false" value="{!'<ext:ResourcePlaceHolder runat=\"server\" Mode=\"Style\" />'}"/>
+    <apex:form >
+        <apex:pageBlock title="Search Student">
+            <div class="search-form">
+                <div class="input-wrapper">
+                    <label class="label">学生コード</label>
+                    <apex:inputText styleClass="searchCriterias" value="{!searchStudentCode}" onkeyup="enableResetBtn(this)"/>
+                </div>
+                <div class="input-wrapper">
+                    <label class="label">名</label>
+                    <apex:inputText styleClass="searchCriterias" value="{!searchName}" onkeyup="enableResetBtn(this)"/>
+                </div>
+                <div class="input-wrapper">
+                    <label class="label">クラス</label>
+                    <apex:selectList styleClass="searchCriterias" value="{!selectedClass}" size="1" onchange="enableResetBtn(this)">
+                        <apex:selectOptions value="{!classOptions}"/>
+                    </apex:selectList>
+                </div>
+                <div class="input-wrapper">
+                    <label class="label">性別</label>
+                    <apex:selectList styleClass="searchCriterias" value="{!selectedGender}" size="1" onchange="enableResetBtn(this)">
+                        <apex:selectOptions value="{!genderOptions}" />
+                    </apex:selectList>
+                </div>
+                <div class="input-wrapper">
+                    <label class="label">生年月日</label>
+                    <apex:input styleClass="searchCriterias" type="date" value="{!searchBirthday}" onchange="enableResetBtn(this)"/>
+                </div>
+                <div class="input-wrapper">
+                    <label class="label">日生</label>
+                    <apex:selectList styleClass="searchCriterias" value="{!selectedDate}" size="1" onchange="enableResetBtn(this)">
+                        <apex:selectOptions value="{!dateRange}" />
+                    </apex:selectList>
+                </div>
+                <div class="input-wrapper">
+                    <label class="label">月生</label>
+                    <apex:selectList styleClass="searchCriterias" value="{!selectedMonth}" size="1" onchange="enableResetBtn(this)">
+                        <apex:selectOptions value="{!monthRange}" />
+                    </apex:selectList>
+                </div>
+                <div class="input-wrapper">
+                    <label class="label">年生</label>
+                    <apex:selectList styleClass="searchCriterias" value="{!selectedYear}" size="1" onchange="enableResetBtn(this)">
+                        <apex:selectOptions value="{!yearRange}" />
+                    </apex:selectList>
+                </div>
+            </div>
+            <apex:commandButton value="検索" action="{!searchStudent}" 
+                                rerender="studentTable" style="margin-right: 10px;"
+                                onclick="disableButton(this)"
+                                oncomplete="enableButton(this); checkBoxSet.clear();getTotalSelectedStudent(); uncheckSelectAll()" />
+            <apex:commandButton value="作成" action="/apex/VF_CreateStudent" style="margin-right: 10px;"
+                                onclick="disableButton(this)" oncomplete="enableButton(this)" />
+            <apex:commandButton styleClass="btnReset disableBtn" value="クリア" 
+                                action="{!searchStudent}" onclick="this.form.reset(); updateSelectAllCheckbox();"
+                                style="margin-right: 10px;"/>
+            <apex:commandButton styleClass="deleteMany disableBtn" value="削除" 
+                                action="{!deleteSelectedStudent}" reRender="studentTable" style="margin-right: 10px;"
+                onclick="if (!confirm('Do you want to delete selected Student?')){return false} else {}"
+                oncomplete="updateSelectAllCheckbox(); updateRemainingSeletedRecord(); isDisableAfterDelete();"/>
+        </apex:pageBlock>
+
+        <apex:pageBlock id="studentTable">
+            <apex:pageMessages />
+            <div style="text-align:center; font-size: 15px;">
+                <apex:outputLabel value="Total Students: {! IF(totalRecords != null, totalRecords, 0)}" 
+                                style="font-weight: bold" />
+            </div>
+            <br/>
+            <apex:outputPanel >
+                <apex:pageBlockTable value="{!studentListResult}" var="hs">
+                    <apex:column >
+                        <apex:facet name="header">
+                            <apex:inputCheckbox styleClass="checkboxSelectAll" onclick="toggleCheckboxes(this)"/>
+                        </apex:facet>
+                        <apex:inputCheckbox value="{!checkDelete[hs.Id]}" styleClass="checkbox_{!hs.Id}" 
+                                            onclick="handleSelect(this);" />
+                    </apex:column>
+                    <apex:column headerValue="学生コード">
+                        <a href="/apex/VF_DetailStudent?id={!hs.Id}" target="_blank">{!hs.StudentCode__c}</a>
+                    </apex:column>
+                    <apex:column value="{!hs.Firstname__c}" headerValue="姓" />
+                    <apex:column value="{!hs.Lastname__c}" headerValue="名" />
+                    <apex:column value="{!hs.Birthday__c}" headerValue="生年月日" />
+                    <apex:column headerValue="性別">
+                        <apex:outputLabel value="{!IF(hs.Gender__c == 'Male', '男性 (Male)', '女性 (Female)')}" />
+                    </apex:column>
+                    <apex:column headerValue="クラス">
+                        <a href="https://tptanphuoc-dev-ed.develop.lightning.force.com/lightning/r/Class__c/{!hs.Class_look__r}/view" 
+                            target="_blank">{!hs.Class_look__r.Name}</a>
+                    </apex:column>
+                    <apex:column headerValue="学習状況">
+                        <apex:outputLabel value="{!CASE(hs.LearningStatus__c, 'Enrolled', '在学中 (Enrolled)', 'Withdrawn', '退学 (Withdrawn)', 'Graduated', '卒業済み (Graduated)', 'Unknown')}"
+                        />
+                    </apex:column>
+                    <apex:column value="{!hs.GPAScore__c}" headerValue="平均学分绩点" />
+                    <apex:column headerValue="アクション">
+                        <apex:commandButton value="Update" 
+                                    onclick="window.open('/apex/VF_UpdateStudent?id={!hs.Id}', '_blank'); return false;" />
+                        <apex:commandButton value="Detail" 
+                                    onclick="window.open('/apex/VF_DetailStudent?id={!hs.Id}', '_blank'); return false;" />
+                        <apex:commandButton value="Delete" action="{!deleteStudent}" rerender="studentTable" 
+                                    onclick="if (!confirm('Do you want to delete {!hs.Firstname__c +' '+ hs.Lastname__c}?')){return false;} else {deleteOne(this, '{!hs.Id}')}"
+                                    oncomplete="getTotalSelectedStudent(); isDisableAfterDelete();">
+                            <apex:param name="recordId" value="{!hs.Id}" assignTo="{!recordIdToDelete}" />
+                        </apex:commandButton>
+                    </apex:column>
+                </apex:pageBlockTable>
+                <div style=" margin-top: 5px">
+                    <span style="font-weight: bold;">
+                        Selected Students: <h1 id="selectedCount">0</h1>/{!totalRecords}
+                    </span>
+                </div>
+                <div style="text-align: center">
+                        <apex:commandButton value="First" action="{!first}" 
+                                disabled="{!currentPage == 1 || currentPage == 0}" rerender="studentTable" 
+                                oncomplete="getTotalSelectedStudent(); getSelectedStudentInOnePage(this)"/>
+                        <apex:commandButton value="Previous" action="{!previous}" 
+                                disabled="{!(!hasPrevious)}" rerender="studentTable" 
+                                oncomplete="getTotalSelectedStudent(); getSelectedStudentInOnePage(this)"/>
+                        <apex:repeat value="{!pages}" var="p">
+                            <apex:commandLink value="{!p}" action="{!goToPage}" 
+                                            rerender="studentTable" 
+                                            oncomplete="getTotalSelectedStudent(); getSelectedStudentInOnePage(this)"
+                                            styleClass="pagination-link {!IF(currentPage == p, 'current-page', '')}">
+                                <apex:param name="pageNumber" value="{!p}" assignTo="{!currentPage}"/>
+                            </apex:commandLink>
+                        </apex:repeat>
+                        <apex:commandButton value="Next" action="{!next}" 
+                                        disabled="{!(!hasNext) || totalRecords == 0 || totalRecords == null}"
+                                        rerender="studentTable" oncomplete="getTotalSelectedStudent(); getSelectedStudentInOnePage(this)"/>
+                        <apex:commandButton value="Last" action="{!last}" 
+                                        disabled="{!currentPage == totalPages || totalRecords == 0 || totalRecords == null}"
+                                        rerender="studentTable" oncomplete="getTotalSelectedStudent(); getSelectedStudentInOnePage(this)"/>
+                </div>
+                <div>
+                    <apex:outputText style="display:block;text-align:center" value="Page {!currentPage} of {!totalPages}" />
+                </div>
+                
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+    <script type="text/javascript">
+        let checkBoxSet = new Set();
+        let selectedStudentInOnePage = 0;
+
+        function enableResetBtn(input) {
+            let inputs = document.querySelectorAll('.searchCriterias');
+            let isNotBlank = false;
+            for (var i = 0; i < inputs.length; i++) {
+                if (inputs[i].value !== null && inputs[i].value !== '') {
+                    isNotBlank = true;
+                    break;
+                }
+            }
+            
+            if (isNotBlank) {
+                document.querySelector('.btnReset').classList.remove('disableBtn');
+            } else {
+                document.querySelector('.btnReset').classList.add('disableBtn');
+            }
+        }
+
+        // disable button to avoid spam
+        function disableButton(btn) {
+            btn.setAttribute('original-value', btn.value);
+            btn.value = '.....';
+            btn.disabled = true;
+            defaultEventListenerForSubmitBtn = btn.onclick;
+            btn.onclick = function() {
+                btn.value = '.....';
+                return false;
+            }
+        };
+
+        // re-enable button when complete
+        function enableButton(btn) {
+            btn.onclick = defaultEventListenerForSubmitBtn;
+            btn.disabled = false;
+            btn.value = btn.getAttribute('original-value');
+        };
+        
+        function getTotalSelectedStudent() {
+            document.getElementById('selectedCount').textContent = checkBoxSet.size;
+            updateSelectAllCheckbox();
+        };
+
+        function uncheckSelectAll() {
+            // if no Student__c found after search => uncheck the checkboxSelectAll
+            selectedStudentInOnePage = 0;
+            document.querySelector('input[type="checkbox"].checkboxSelectAll').checked = false;
+        }
+
+        function getSelectedStudentInOnePage(btn) {
+            // reset the selectedStudentInOnePage to 0;
+            selectedStudentInOnePage = 0;
+            var checkboxes = document.querySelectorAll('input[type="checkbox"][class^="checkbox_"]');
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    selectedStudentInOnePage++;
+                }
+                if (checkBoxSet.has(checkboxes[i].className) && btn.className.includes("deleteMany")) {
+                    checkBoxSet.delete(checkboxes[i].className);
+                }
+            }
+        };
+
+        function isDisableAfterDelete() {
+            // reset the selectedStudentInOnePage to 0;
+            selectedStudentInOnePage = 0;
+            var checkboxes = document.querySelectorAll('input[type="checkbox"][class^="checkbox_"]');
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i].checked) {
+                    selectedStudentInOnePage++;
+                }
+            }
+            // if checkBoxSet is 0 after delete one
+            if (checkBoxSet.size == 0) {
+                document.querySelector('.deleteMany').classList.add('disableBtn');
+            }
+        };
+
+        function toggleCheckboxes(headerCheckbox) {
+            var checkboxes = document.querySelectorAll('input[type="checkbox"][class^="checkbox_"]');
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = headerCheckbox.checked;
+                
+                if (headerCheckbox.checked) {
+                    selectedStudentInOnePage++;
+                    checkBoxSet.add(checkboxes[i].className)
+                } else {
+                    selectedStudentInOnePage--;
+                    checkBoxSet.delete(checkboxes[i].className)
+                }
+
+                if (checkBoxSet.size > 0) {
+                    document.querySelector('.deleteMany').classList.remove('disableBtn');
+                } else {
+                    document.querySelector('.deleteMany').classList.add('disableBtn');
+                }
+            }
+            document.getElementById('selectedCount').textContent = checkBoxSet.size;
+        };
+
+        // check/uncheck one checkbox for a record
+        function handleSelect(checkbox) {
+            if (checkbox.checked) {
+                selectedStudentInOnePage++;
+
+                checkBoxSet.add(checkbox.className);
+            } else {
+                selectedStudentInOnePage--;
+                checkBoxSet.delete(checkbox.className);
+            }
+            document.getElementById('selectedCount').textContent = checkBoxSet.size;
+            updateSelectAllCheckbox();
+            if (checkBoxSet.size > 0) {
+                document.querySelector('.deleteMany').classList.remove('disableBtn');
+            } else {
+                document.querySelector('.deleteMany').classList.add('disableBtn');
+            }
+        };
+
+        // check/uncheck the checkboxSelectAll if all checkbox is check/uncheck
+        function updateSelectAllCheckbox() {
+            let checkboxes = document.querySelectorAll('input[type="checkbox"][class^="checkbox_"]');
+            let selectAllCheckbox = document.querySelector('input[type="checkbox"].checkboxSelectAll');
+            let allChecked = true;
+            if (checkboxes.length == 0) {
+                allChecked = false;
+            }
+            for (let i = 0; i < checkboxes.length; i++) {
+                if (!checkboxes[i].checked) {
+                    allChecked = false;
+                    break;
+                }
+            }
+            selectAllCheckbox.checked = allChecked;
+        };
+
+        // update remaining selected student of all pages after multiple delete
+        function updateRemainingSeletedRecord() {
+            checkBoxSet.clear();
+            document.getElementById('selectedCount').textContent = checkBoxSet.size;
+            document.querySelector('.deleteMany').classList.add('disableBtn');
+        };
+
+        function deleteOne(btn, recordId) {
+            if (checkBoxSet.has('checkbox_'+recordId)) {
+                checkBoxSet.delete('checkbox_'+recordId);
+                selectedStudentInOnePage--;
+            }
+            document.getElementById('selectedCount').textContent = checkBoxSet.size;
+        };
+    </script>
+
+</apex:page>

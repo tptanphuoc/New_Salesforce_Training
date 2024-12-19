@@ -1,0 +1,17 @@
+.THIS.filter-layout {
+    background-color: #e01414;
+}
+
+.THIS .header-column {
+    color: brown;
+    padding: 0 2rem;
+}
+
+.THIS.c-container {
+    border: 1px solid #fc1504;
+    margin: 10px 0 20px 0;
+}
+
+.THIS .slds-form-element__label {
+    font-weight: bold; 
+}

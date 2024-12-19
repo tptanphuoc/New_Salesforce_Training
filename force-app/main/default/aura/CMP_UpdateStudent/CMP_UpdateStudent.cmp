@@ -1,0 +1,49 @@
+<aura:component controller="CMP_UpdateStudentCtrl" implements="flexipage:availableForAllPageTypes" access="public">
+    <!-- Attributes -->
+    <aura:attribute name="studentId" type="String"/>
+    <aura:attribute name="existingStudent" type="Student__c" default="{'sobjectType': 'Student__c'}"/>
+    <aura:attribute name="classOptions" type="List" />
+    <aura:attribute name="selectedClass" type="String" />
+    <aura:attribute name="genderOptions" type="List" />
+    <aura:attribute name="selectedGender" type="String" />
+    <aura:attribute name="learningStatusOptions" type="List" />
+    <aura:attribute name="selectedLearningStatus" type="String" />
+    <!-- Handlers -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <!-- Events -->
+    <aura:registerEvent name="updateSuccess" type="c:CMP_CloseModalEvent" />
+    <aura:registerEvent name="cancelUpdate" type="c:CMP_CloseModalEvent" />
+
+    <lightning:card title="Update Student" iconName="standard:job_position">
+        <div class="slds-p-around_small">
+            <form class="slds-form slds-form_stacked" aura:id="studentForm" onsubmit="{!c.updateStudent}">
+                <lightning:input label="First Name" value="{!v.existingStudent.Firstname__c}" required="true" />
+                <lightning:input label="Last Name" value="{!v.existingStudent.Lastname__c}" required="true" />
+                <lightning:input label="Birthday" value="{!v.existingStudent.Birthday__c}" type="date" required="true" dateStyle="short"/>
+
+                <lightning:select label="Class" value="{!v.selectedClass}" required="true" >
+                    <aura:iteration items="{!v.classOptions}" var="item">
+                        <option text="{!item.label}" value="{!item.value}" selected="{!item.value == v.selectedClass}"/>
+                    </aura:iteration>
+                </lightning:select>
+
+                <lightning:select label="Gender" value="{!v.selectedGender}" required="true">
+                    <aura:iteration items="{!v.genderOptions}" var="item">
+                        <option text="{!item.label}" value="{!item.value}" selected="{!item.value == v.selectedGender}"/>
+                    </aura:iteration>
+                </lightning:select>
+
+                <lightning:select label="Learning Status" value="{!v.selectedLearningStatus}" required="true">
+                    <aura:iteration items="{!v.learningStatusOptions}" var="item">
+                        <option text="{!item.label}" value="{!item.value}" selected="{!item.value == v.selectedLearningStatus}"/>
+                    </aura:iteration>
+                </lightning:select>
+                
+                <div class="slds-m-top_medium slds-text-align_right">
+                    <lightning:button label="Cancel" variant="neutral" onclick="{!c.closeModal}" />
+                    <lightning:button label="Update" type="submit" variant="brand"/>
+                </div>
+            </form>
+        </div>
+    </lightning:card>
+</aura:component>

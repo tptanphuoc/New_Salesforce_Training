@@ -1,0 +1,14 @@
+.fixed-width-table th, .fixed-width-table td {
+    width: 100px; /* Default width for other columns */
+    max-width: 100px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.subject-name-column {
+    width: 20% !important; /* Increase width for the subject.name column */
+}
+
+.slds-text-title_bold.slds-p-bottom_x-small {
+    color: rgb(4, 132, 245);
+}

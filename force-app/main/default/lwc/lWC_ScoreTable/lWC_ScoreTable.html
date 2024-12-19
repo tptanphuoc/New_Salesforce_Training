@@ -1,0 +1,104 @@
+<template>
+    <div class="slds-card slds-m-top_medium">
+        <!-- Header Section -->
+        <div class="slds-card__header slds-grid slds-wrap">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate slds-col slds-size_1-of-2">
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title slds-text-heading_medium slds-truncate">GPA Score</h2>
+                </div>
+            </header>
+            <div class="slds-col slds-size_1-of-2 slds-grid slds-grid_align-end">
+                <div class="slds-p-right_small">
+                    <lightning-button label="Export PDF" variant="brand" onclick={handleExportPDF}></lightning-button>
+                </div>
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control">
+                        <lightning-select options={semesterOptions} onchange={handleSemesterChange} variant="label-hidden"></lightning-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Body Section -->
+        <div class="slds-card__body slds-p-around_medium">
+            <div class="slds-text-heading_small slds-p-bottom_small">
+                Total Credits: <strong>{studentDetails.TotalCredit__c}</strong> &nbsp;&nbsp;&nbsp; Average Score:&nbsp;
+                <strong>{studentDetails.GPAScore__c}</strong>
+            </div>
+
+            <!-- If contain SubjectScore in that Semester -->
+            <template lwc:if={containsSubjectData}>
+                <!-- Loop through each Semester -->
+                <template for:each={scoreTableData} for:item="semester">
+                    <div key={semester.Id} class="slds-m-bottom_medium">
+                        <div class="slds-text-title_bold slds-p-bottom_x-small">{semester.name}</div>
+
+                        <!-- Subjects -->
+                        <div class="slds-table slds-table_bordered slds-table_fixed-layout">
+                            <table class="slds-table slds-table_bordered slds-table_cell-buffer fixed-width-table slds-border_left slds-border_right">
+                                <thead>
+                                    <tr class="slds-line-height_reset">
+                                        <template for:each={scoreColumns} for:item="column">
+                                            <th scope="col" key={column.label}>
+                                                <div class="slds-truncate" title={column.label}>{column.label}</div>
+                                            </th>
+                                        </template>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Loop through each subject for the year -->
+                                    <template for:each={semester.subjects} for:item="subject">
+                                        <tr key={subject.code} class="slds-hint-parent">
+                                            <td>
+                                                <div>{subject.code}</div>
+                                            </td>
+                                            <td class="subject-name-column">
+                                                <div>{subject.name}</div>
+                                            </td>
+                                            <td>
+                                                <div>{subject.credit}</div>
+                                            </td>
+                                            <td>
+                                                <div>{subject.progress}</div>
+                                            </td>
+                                            <td>
+                                                <div>{subject.practical}</div>
+                                            </td>
+                                            <td>
+                                                <div>{subject.midterm}</div>
+                                            </td>
+                                            <td>
+                                                <div>{subject.final}</div>
+                                            </td>
+                                            <td>
+                                                <div class={subject.averageClass}>{subject.average}</div>
+                                            </td>
+                                        </tr>
+                                    </template>
+
+                                    <!-- Average Score Row -->
+                                    <tr>
+                                        <td></td>
+                                        <td class="slds-text-title_bold">Semester AVG Score</td>
+                                        <td>
+                                            <div class="slds-truncate">{semester.totalCredit}</div>
+                                        </td>
+                                        <td colspan="4"></td>
+                                        <td>
+                                            <div class="slds-truncate">{semester.averageScore}</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </template>
+            </template>
+        </div>
+        <template lwc:if={isLoadMore}>
+            <div class="slds-card__footer slds-p-around_medium">
+                <lightning-button class="slds-button_neutral" label="Load More" onclick={handleLoadMore}></lightning-button> 
+            </div>
+        </template>
+    </div>
+</template>
